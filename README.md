@@ -1,2 +1,3 @@
 # catapult-simulation
-TNM085: Catapult physics simulation in WebGL
+TNM085 MoS-projekt: Catapult physics simulation in WebGL
+
