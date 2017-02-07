@@ -23,7 +23,7 @@ var cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
 
 			
-camera.position.z = 5;
+camera.position.z = 10;
 
 // Creating position array ------------------------------------------------
 
@@ -88,7 +88,6 @@ while (y[i] >= 0)
 
 //------------------------------------------------------------------------------------------------------
 
-
 i = 0;
 render();
 function render() {
@@ -98,9 +97,8 @@ function render() {
 
     while(i < y.length)
     {
-        cube.position.x = x[i];
-        cube.position.y = y[i];
-        cube.position.z = 0;
+        cube.translateX(x[i]);
+        //.....
 
         console.log("x: " + cube.position.x + " 	y: " + cube.position.y);
         i++;	
