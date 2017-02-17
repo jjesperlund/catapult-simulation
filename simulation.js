@@ -45,7 +45,7 @@ spotLight.castShadow = true;
 spotLight.position.set(0,30,30);
 scene.add(spotLight);
 			
-camera.position.set(30,25,30);
+camera.position.set(10,30,45);
 camera.lookAt(scene.position);
 //------------------------------------------------------------------------------------------------------
 
@@ -61,8 +61,7 @@ render();
 
 function render(){
 
-     setTimeout( function() { requestAnimationFrame(render); }, 20 );
-
+    setTimeout( function() { requestAnimationFrame(render); }, 20 );
     stats.update();
     projectile.scale.y = guiControls.height1;
 
