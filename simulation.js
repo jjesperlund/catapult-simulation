@@ -10,8 +10,8 @@ var guiControls = new function(){
 
 var datGUI = new dat.GUI();
 
-datGUI.add(guiControls, "projectileMass", 0.5, 1.5); 
-datGUI.add(guiControls, "leverLength", 12, 25);
+datGUI.add(guiControls, "projectileMass", 0.8, 1.5); 
+datGUI.add(guiControls, "leverLength", 12, 20);
 datGUI.add(guiControls,'start');
 
 stats = new Stats();
@@ -53,7 +53,7 @@ var loader = new THREE.JSONLoader();
     catapult.scale.x = 0.05;
     catapult.scale.y = 0.05;
     catapult.scale.z = 0.05;
-    catapult.position.set(4,-3,1);
+    catapult.position.set(4,-0.6,1);
     }
 );
 
@@ -69,7 +69,7 @@ var loader = new THREE.JSONLoader();
         terrain.scale.x = 0.2;
         terrain.scale.y = 0.2;
         terrain.scale.z = 0.2;
-        terrain.position.set(0,-4,0);
+        terrain.position.set(0,-1.6,0);
         }
     );
 
@@ -85,7 +85,7 @@ var leverGeometry = new THREE.BoxGeometry(1,0.5,1),
     leverMaterial = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') }),
     lever = new THREE.Mesh(leverGeometry, leverMaterial);
 
-lever.position.set(4,3.8,1);
+lever.position.set(4,6.2,1);
 lever.rotation.z = Math.PI/4;
 
 scene.add(lever);
@@ -95,12 +95,18 @@ scene.add(lever);
   counterWeight = new THREE.Mesh(counterWeightGeometry,counterWeightMaterial);
 
   scene.add(counterWeight);
-  counterWeight.position.set(7.5,10.5,1);
+  counterWeight.position.set(7.5,12.8,1);
 
-var spotLight = new THREE.SpotLight(0xffffff);
-spotLight.castShadow = true;
-spotLight.position.set(0,30,30);
-scene.add(spotLight);
+// Spotlights
+var spotLight_far = new THREE.SpotLight(0xffffff);
+spotLight_far.castShadow = true;
+spotLight_far.position.set(0,110,10);
+scene.add(spotLight_far);
+
+var spotLight_near = new THREE.SpotLight(0xffffff, 0.1);
+spotLight_near.castShadow = true;
+spotLight_near.position.set(5,10,5);
+scene.add(spotLight_near);
 			
 camera.position.set(10,15,10);
 camera.lookAt(scene.position);
@@ -110,7 +116,7 @@ camera.lookAt(scene.position);
 var x = [], y = [], result = [], i = 0;
 
 result = getPosArray(x,y);
-projectile.position.set(result.x[1], result.y[1], 1);
+projectile.position.set(result.x[0], result.y[0], 1);
 render();
 
 
@@ -166,10 +172,10 @@ function getPosArray(x,y){
     //Calculate init velocity
     let m1 = 100,               //counter weight mass
         m2 = 1,                 //projectile mass
-        d1 = 0.6,                 //distance: frame to counter weight 
+        d1 = 0.6,               //distance: frame to counter weight 
         d2 = 4,                 //distance: projectile to frame   
         theta = Math.PI/4,      //degree (rad)
-        frameHeight = 0.5 - 3;
+        frameHeight = 0.5;
 
     var v0 = getInitVelocity(m1,m2,d1,d2,theta);
     let vx = v0*Math.cos(theta),       
