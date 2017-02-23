@@ -1,0 +1,13 @@
+Hur man skriver i terminalen för att konvertera .obj till .js
+
+1. cd /Users/jesperlund/Documents/WebGL/objects 
+
+2. python convert_obj.py -i lee-perry-smith-head-scan.obj -o head.js
+
+	där -i är inläsefilen och -o är outputfilen
+
+
+
+
+Svar av terminalen:
+ Converting [lee-perry-smith-head-scan.obj] into [head.js] ...

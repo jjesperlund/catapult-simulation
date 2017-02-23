@@ -8,7 +8,6 @@ var guiControls = new function(){
 }
 
 var datGUI = new dat.GUI();
-//var obj = { add:function(){ console.log("clicked") }};
 
 datGUI.add(guiControls, "height1", 0, 1.8); 
 datGUI.add(guiControls,'start');
@@ -24,7 +23,7 @@ var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeig
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setClearColor (0xffffff,1);
+renderer.setClearColor (0xE5F6FF,1);
 renderer.shadowMapEnabled = true;
 renderer.shadowMapSoft = true;
 document.body.appendChild( renderer.domElement );
@@ -38,45 +37,63 @@ var controls = new THREE.OrbitControls( camera, renderer.domElement);
 controls.maxPolarAngle = Math.PI/2.2;
 
 // Import objects
-/*
 var loader = new THREE.JSONLoader();
 
     loader.load(
-    // resource URL
-    'objects/landscape.js',
+    'objects/catapult.js',
     // Function when resource is loaded
     function ( geometry, materials ) {
-        var landscapeMaterial = new THREE.MeshPhongMaterial({ color: 0x666666, specular: 2 });
-        var landscape = new THREE.Mesh( geometry, landscapeMaterial );
-        scatterPlot.add( landscape );
+        var catapultMaterial = new THREE.MeshPhongMaterial({ color: 0x444444, specular: 5 });
+        var catapult = new THREE.Mesh( geometry, catapultMaterial );
+        scene.add( catapult );
 
     //JSON Object Static Transformations
- 
+    catapult.scale.x = 0.05;
+    catapult.scale.y = 0.05;
+    catapult.scale.z = 0.05;
+    catapult.position.set(4,-3,1);
     }
 );
+/*
+    loader.load(
+        'objects/landscape.js',
+        // Function when resource is loaded
+        function ( geometry, materials ) {
+            var terrainMaterial = new THREE.MeshPhongMaterial({ color: 0x444444, specular: 5 });
+            var terrain = new THREE.Mesh( geometry, terrainMaterial );
+            scene.add( terrain );
+
+        //JSON Object Static Transformations
+        terrain.scale.x = 0.0007;
+        terrain.scale.y = 0.0007;
+        terrain.scale.z = 0.0007;
+        }
+    );
 */
 
-var geometry = new THREE.SphereGeometry( 2, 20,20 ),
+
+var geometry = new THREE.SphereGeometry( 1, 20,20 ),
     material = new THREE.MeshLambertMaterial( { color: 0x0000ff} ),
     projectile = new THREE.Mesh( geometry, material );
 
 projectile.castShadow = true;
 scene.add(projectile);
 
-var planeGeometry = new THREE.PlaneGeometry(80,30,30),
-    planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff}),
-    plane         = new THREE.Mesh(planeGeometry, planeMaterial);
+var leverGeometry = new THREE.BoxGeometry(12,0.5,1),
+    leverMaterial = new THREE.MeshLambertMaterial({color: 0x000000, specular: 3}),
+    lever = new THREE.Mesh(leverGeometry, leverMaterial);
 
-plane.rotation.x = -0.5*Math.PI;
-plane.receive = true;
-scene.add(plane);
+lever.position.set(4,3.8,1);
+lever.rotation.z = Math.PI/4;
+
+scene.add(lever);
 
 var spotLight = new THREE.SpotLight(0xffffff);
 spotLight.castShadow = true;
 spotLight.position.set(0,30,30);
 scene.add(spotLight);
 			
-camera.position.set(10,30,45);
+camera.position.set(10,15,5);
 camera.lookAt(scene.position);
 //------------------------------------------------------------------------------------------------------
 
@@ -92,16 +109,20 @@ render();
 
 function render(){
 
-    setTimeout( function() { requestAnimationFrame(render); }, 20 );
+    requestAnimationFrame(render);
     stats.update();
     projectile.scale.y = guiControls.height1;
 
     if(startPressed == true)
     {
+        
+        if(i < 40)
+            lever.rotation.z -= Math.PI/60;
+
         if(result.y[i] >= 0){
 
-        projectile.position.x = result.x[i] * 5;
-        projectile.position.y = result.y[i] * 5;
+        projectile.position.x = result.x[i] * 3;
+        projectile.position.y = result.y[i] * 3;
         projectile.position.z = 0;  
 
         console.log("x: " + projectile.position.x + " 	y: " + projectile.position.y);
@@ -128,10 +149,10 @@ function getPosArray(x,y){
     const g = 9.81; 
 
     //Calculate init velocity
-    let m1 = 200,               //counter weight mass
-        m2 = 0.5,                 //projectile mass
+    let m1 = 100,               //counter weight mass
+        m2 = 1,                 //projectile mass
         d1 = 0.6,                 //distance: frame to counter weight 
-        d2 = 7,                 //distance: projectile to frame   
+        d2 = 4,                 //distance: projectile to frame   
         theta = Math.PI/4,      //degree (rad)
         frameHeight = 0.5 - 3;
 
@@ -140,14 +161,14 @@ function getPosArray(x,y){
         vy = v0*Math.sin(theta);       
 
     //Initial values
-    let delta_t = 0.01;     // step size       
+    let delta_t = 0.005;     // step size       
     x[0] = 0;                                
     y[0] = Math.sin(theta) * d2 + frameHeight;
 
     //Air drag
-    const r = 0.1,              //radius of projectil
+    const r = 0.2,              //radius of projectil
           A = Math.PI * r^2,    //area of projectile (disc)
-          C = 0.5,                //air drag coeff (0 - 1)
+          C = 0.2,                //air drag coeff (0 - 1)
           rho = 1.2;            // air density
 
     let Fdrag_x, Fdrag_y, ax, ay, i = 0;
