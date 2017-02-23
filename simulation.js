@@ -90,7 +90,7 @@ lever.rotation.z = Math.PI/4;
 
 scene.add(lever);
 
- var counterWeightGeometry = new THREE.BoxGeometry(3,3,3), 
+ var counterWeightGeometry = new THREE.BoxGeometry(4,4,4), 
   counterWeightMaterial = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') }),
   counterWeight = new THREE.Mesh(counterWeightGeometry,counterWeightMaterial);
 
