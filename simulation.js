@@ -61,7 +61,7 @@ var loader = new THREE.JSONLoader();
         'objects/landscape.js',
         // Function when resource is loaded
         function ( geometry, materials ) {
-            var terrainMaterial = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert2.jpg') });
+            var terrainMaterial = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture('textures/sand.jpg') });
             var terrain = new THREE.Mesh( geometry, terrainMaterial );
             scene.add( terrain );
 
@@ -73,7 +73,7 @@ var loader = new THREE.JSONLoader();
         }
     );
 
-
+// Geometries
 var geometry = new THREE.SphereGeometry( 0.7, 10,10 ),
     material = new THREE.MeshLambertMaterial( { color: 0x333333} ),
     projectile = new THREE.Mesh( geometry, material );
@@ -90,25 +90,25 @@ lever.rotation.z = Math.PI/4;
 
 scene.add(lever);
 
- var counterWeightGeometry = new THREE.BoxGeometry(3,3,3), 
-  counterWeightMaterial = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') }),
-  counterWeight = new THREE.Mesh(counterWeightGeometry,counterWeightMaterial);
+var counterWeightGeometry = new THREE.BoxGeometry(3,3,3), 
+    counterWeightMaterial = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') }),
+     counterWeight = new THREE.Mesh(counterWeightGeometry,counterWeightMaterial);
 
-  scene.add(counterWeight);
-  counterWeight.position.set(7.5,12.8,1);
+scene.add(counterWeight);
+counterWeight.position.set(7.5,12.8,1);
 
-// Spotlights
-var spotLight_far = new THREE.SpotLight(0xffffff);
-spotLight_far.castShadow = true;
-spotLight_far.position.set(0,110,10);
-scene.add(spotLight_far);
+// Spotlight
+var spotLight = new THREE.SpotLight(0xffffff, 1, 30);
+spotLight.castShadow = true;
+spotLight.position.set(0,20,5);
+scene.add(spotLight);
 
-var spotLight_near = new THREE.SpotLight(0xffffff, 0.1);
-spotLight_near.castShadow = true;
-spotLight_near.position.set(5,10,5);
-scene.add(spotLight_near);
+// Sun Lightning
+var sun = new THREE.DirectionalLight(0xffffff, 0.9);
+sun.castShadow = true;
+scene.add(sun);
 			
-camera.position.set(10,15,10);
+camera.position.set(10,25,20);
 camera.lookAt(scene.position);
 //------------------------------------------------------------------------------------------------------
 
@@ -182,7 +182,7 @@ function getPosArray(x,y){
         vy = v0*Math.sin(theta);       
 
     //Initial values
-    let delta_t = 0.005;     // step size       
+    let delta_t = 0.01;     // step size       
     x[0] = 0;                                
     y[0] = Math.sin(theta) * d2 + frameHeight;
 
