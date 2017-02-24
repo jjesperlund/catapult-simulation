@@ -5,13 +5,22 @@ var startPressed = false;
 var guiControls = new function(){
     this.projectileMass = 1;
     this.leverLength = 14;
+	this.cWeight = 150;
+	this.pWeight = 0.2;
+	this.airRes = true;
+
     this.start = function() {startPressed = true;}
 }
 
 var datGUI = new dat.GUI();
 
+//datGUI.domElement.id='gui';
 datGUI.add(guiControls, "projectileMass", 0.8, 1.5); 
 datGUI.add(guiControls, "leverLength", 12, 20);
+datGUI.add(guiControls, "cWeight", 50, 200);
+datGUI.add(guiControls, "pWeight", 0.1, 3);
+datGUI.add(guiControls, "airRes");
+asds
 datGUI.add(guiControls,'start');
 
 stats = new Stats();
@@ -170,8 +179,8 @@ function getPosArray(x,y){
     const g = 9.81; 
 
     //Calculate init velocity
-    let m1 = 100,               //counter weight mass
-        m2 = 1,                 //projectile mass
+    let m1 = guiControls.cWeight,               //counter weight mass
+        m2 = guiControls.pWeight,                 //projectile mass
         d1 = 0.6,               //distance: frame to counter weight 
         d2 = 4,                 //distance: projectile to frame   
         theta = Math.PI/4,      //degree (rad)
