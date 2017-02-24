@@ -4,13 +4,15 @@ var startPressed = false;
 //GUI --------------------------------------------------------------------------------------------------
 var guiControls = new function(){
     this.projectileMass = 1;
+    this.counterMass = 120;
     this.leverLength = 14;
     this.start = function() {startPressed = true;}
 }
 
 var datGUI = new dat.GUI();
 
-datGUI.add(guiControls, "projectileMass", 0.8, 1.5); 
+datGUI.add(guiControls, "projectileMass", 0.8, 1.5);
+datGUI.add(guiControls, "counterMass", 70, 200);  
 datGUI.add(guiControls, "leverLength", 12, 20);
 datGUI.add(guiControls,'start');
 
@@ -108,15 +110,13 @@ var sun = new THREE.DirectionalLight(0xffffff, 0.9);
 sun.castShadow = true;
 scene.add(sun);
 			
-camera.position.set(10,25,20);
+camera.position.set(10,15,10);
 camera.lookAt(scene.position);
 //------------------------------------------------------------------------------------------------------
 
 // Creating position array 
 var x = [], y = [], result = [], i = 0;
-
-result = getPosArray(x,y);
-projectile.position.set(result.x[0], result.y[0], 1);
+projectile.position.set(0,1, 1);
 render();
 
 
@@ -131,11 +131,14 @@ function render(){
     projectile.scale.x = guiControls.projectileMass;
     projectile.scale.y = guiControls.projectileMass;
     projectile.scale.z = guiControls.projectileMass;
+    counterWeight.scale.set(guiControls.counterMass/150, guiControls.counterMass/150, guiControls.counterMass/150);
+
     lever.scale.x = guiControls.leverLength;
 
     if(startPressed == true)
-    {
-        
+    { 
+        result = getPosArray(x,y);
+
         if(i < 10){
             lever.rotation.z -= Math.PI/20;
             counterWeight.position.y -= 1.2;
@@ -171,9 +174,9 @@ function getPosArray(x,y){
 
     //Calculate init velocity
     let m1 = 100,               //counter weight mass
-        m2 = 1,                 //projectile mass
+        m2 = guiControls.projectileMass,                 //projectile mass
         d1 = 0.6,               //distance: frame to counter weight 
-        d2 = 4,                 //distance: projectile to frame   
+        d2 = guiControls.leverLength,                 //distance: projectile to frame   
         theta = Math.PI/4,      //degree (rad)
         frameHeight = 0.5;
 
