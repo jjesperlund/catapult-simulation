@@ -3,13 +3,15 @@ var startPressed = false;
 
 //GUI --------------------------------------------------------------------------------------------------
 var guiControls = new function(){
-    this.height1 = 1;
+    this.projectileMass = 1;
+    this.leverLength = 14;
     this.start = function() {startPressed = true;}
 }
 
 var datGUI = new dat.GUI();
 
-datGUI.add(guiControls, "height1", 0, 1.8); 
+datGUI.add(guiControls, "projectileMass", 0.8, 1.5); 
+datGUI.add(guiControls, "leverLength", 12, 20);
 datGUI.add(guiControls,'start');
 
 stats = new Stats();
@@ -43,7 +45,7 @@ var loader = new THREE.JSONLoader();
     'objects/catapult.js',
     // Function when resource is loaded
     function ( geometry, materials ) {
-        var catapultMaterial = new THREE.MeshPhongMaterial({ color: 0x444444, specular: 5 });
+        var catapultMaterial = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') });
         var catapult = new THREE.Mesh( geometry, catapultMaterial );
         scene.add( catapult );
 
@@ -51,49 +53,62 @@ var loader = new THREE.JSONLoader();
     catapult.scale.x = 0.05;
     catapult.scale.y = 0.05;
     catapult.scale.z = 0.05;
-    catapult.position.set(4,-3,1);
+    catapult.position.set(4,-0.6,1);
     }
 );
-/*
+
     loader.load(
         'objects/landscape.js',
         // Function when resource is loaded
         function ( geometry, materials ) {
-            var terrainMaterial = new THREE.MeshPhongMaterial({ color: 0x444444, specular: 5 });
+            var terrainMaterial = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture('textures/sand.jpg') });
             var terrain = new THREE.Mesh( geometry, terrainMaterial );
             scene.add( terrain );
 
         //JSON Object Static Transformations
-        terrain.scale.x = 0.0007;
-        terrain.scale.y = 0.0007;
-        terrain.scale.z = 0.0007;
+        terrain.scale.x = 0.2;
+        terrain.scale.y = 0.2;
+        terrain.scale.z = 0.2;
+        terrain.position.set(0,-1.6,0);
         }
     );
-*/
 
-
-var geometry = new THREE.SphereGeometry( 1, 20,20 ),
-    material = new THREE.MeshLambertMaterial( { color: 0x0000ff} ),
+// Geometries
+var geometry = new THREE.SphereGeometry( 0.7, 10,10 ),
+    material = new THREE.MeshLambertMaterial( { color: 0x333333} ),
     projectile = new THREE.Mesh( geometry, material );
 
 projectile.castShadow = true;
 scene.add(projectile);
 
-var leverGeometry = new THREE.BoxGeometry(12,0.5,1),
-    leverMaterial = new THREE.MeshLambertMaterial({color: 0x000000, specular: 3}),
+var leverGeometry = new THREE.BoxGeometry(1,0.5,1),
+    leverMaterial = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') }),
     lever = new THREE.Mesh(leverGeometry, leverMaterial);
 
-lever.position.set(4,3.8,1);
+lever.position.set(4,6.2,1);
 lever.rotation.z = Math.PI/4;
 
 scene.add(lever);
 
-var spotLight = new THREE.SpotLight(0xffffff);
+var counterWeightGeometry = new THREE.BoxGeometry(3,3,3), 
+    counterWeightMaterial = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') }),
+     counterWeight = new THREE.Mesh(counterWeightGeometry,counterWeightMaterial);
+
+scene.add(counterWeight);
+counterWeight.position.set(7.5,12.8,1);
+
+// Spotlight
+var spotLight = new THREE.SpotLight(0xffffff, 1, 30);
 spotLight.castShadow = true;
-spotLight.position.set(0,30,30);
+spotLight.position.set(0,20,5);
 scene.add(spotLight);
+
+// Sun Lightning
+var sun = new THREE.DirectionalLight(0xffffff, 0.9);
+sun.castShadow = true;
+scene.add(sun);
 			
-camera.position.set(10,15,5);
+camera.position.set(10,25,20);
 camera.lookAt(scene.position);
 //------------------------------------------------------------------------------------------------------
 
@@ -111,26 +126,32 @@ function render(){
 
     requestAnimationFrame(render);
     stats.update();
-    projectile.scale.y = guiControls.height1;
+
+    //GUI Updates
+    projectile.scale.x = guiControls.projectileMass;
+    projectile.scale.y = guiControls.projectileMass;
+    projectile.scale.z = guiControls.projectileMass;
+    lever.scale.x = guiControls.leverLength;
 
     if(startPressed == true)
     {
         
-        if(i < 40)
-            lever.rotation.z -= Math.PI/60;
-
+        if(i < 10){
+            lever.rotation.z -= Math.PI/20;
+            counterWeight.position.y -= 1.2;
+        }
         if(result.y[i] >= 0){
 
         projectile.position.x = result.x[i] * 3;
         projectile.position.y = result.y[i] * 3;
         projectile.position.z = 0;  
+        
 
         console.log("x: " + projectile.position.x + " 	y: " + projectile.position.y);
 
         i++;
         }
     }  
-
  	renderer.render(scene, camera);
 }
 
@@ -151,17 +172,17 @@ function getPosArray(x,y){
     //Calculate init velocity
     let m1 = 100,               //counter weight mass
         m2 = 1,                 //projectile mass
-        d1 = 0.6,                 //distance: frame to counter weight 
+        d1 = 0.6,               //distance: frame to counter weight 
         d2 = 4,                 //distance: projectile to frame   
         theta = Math.PI/4,      //degree (rad)
-        frameHeight = 0.5 - 3;
+        frameHeight = 0.5;
 
     var v0 = getInitVelocity(m1,m2,d1,d2,theta);
     let vx = v0*Math.cos(theta),       
         vy = v0*Math.sin(theta);       
 
     //Initial values
-    let delta_t = 0.005;     // step size       
+    let delta_t = 0.01;     // step size       
     x[0] = 0;                                
     y[0] = Math.sin(theta) * d2 + frameHeight;
 
@@ -202,5 +223,6 @@ function getPosArray(x,y){
     }
 
     return {x:x, y:y}
+
 
 }
