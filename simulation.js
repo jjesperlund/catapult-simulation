@@ -1,20 +1,28 @@
 // "Must-be" global variables
 var startPressed = false;
+var resetPressed = false;
 
 //GUI --------------------------------------------------------------------------------------------------
 var guiControls = new function(){
     this.projectileMass = 1;
     this.counterMass = 120;
     this.leverLength = 14;
-    this.start = function() {startPressed = true;}
+    this.airResistance = 0.2;
+    this.start = function() {startPressed = true; resetPressed = false;}
+    this.reset = function() {resetPressed = true; startPressed = false; i = 0;}
+
+    
 }
 
 var datGUI = new dat.GUI();
 
 datGUI.add(guiControls, "projectileMass", 0.8, 1.5);
-datGUI.add(guiControls, "counterMass", 70, 200);  
-datGUI.add(guiControls, "leverLength", 12, 20);
+datGUI.add(guiControls, "counterMass", 80, 200);  
+datGUI.add(guiControls, "leverLength", 12, 18);
+datGUI.add(guiControls,"airResistance",0.12,0.3);
 datGUI.add(guiControls,'start');
+datGUI.add(guiControls,'reset');
+
 
 stats = new Stats();
 document.body.appendChild(stats.domElement);
@@ -43,11 +51,12 @@ controls.maxPolarAngle = Math.PI/2.2;
 // Import objects
 var loader = new THREE.JSONLoader();
 
+var map2 = THREE.ImageUtils.loadTexture('textures/desert.jpg');
     loader.load(
     'objects/catapult.js',
     // Function when resource is loaded
     function ( geometry, materials ) {
-        var catapultMaterial = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') });
+        var catapultMaterial = new THREE.MeshPhongMaterial({ map: map2, bumpMap: map2, bumpScale: 0.5 });
         var catapult = new THREE.Mesh( geometry, catapultMaterial );
         scene.add( catapult );
 
@@ -58,12 +67,13 @@ var loader = new THREE.JSONLoader();
     catapult.position.set(4,-0.6,1);
     }
 );
-
+    var map = THREE.ImageUtils.loadTexture('textures/sand.jpg');
     loader.load(
         'objects/landscape.js',
         // Function when resource is loaded
         function ( geometry, materials ) {
-            var terrainMaterial = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture('textures/sand.jpg') });
+            var terrainMaterial = new THREE.MeshPhongMaterial({ map: map, 
+            bumpMap: map, bumpScale: 0.5 });
             var terrain = new THREE.Mesh( geometry, terrainMaterial );
             scene.add( terrain );
 
@@ -71,7 +81,7 @@ var loader = new THREE.JSONLoader();
         terrain.scale.x = 0.2;
         terrain.scale.y = 0.2;
         terrain.scale.z = 0.2;
-        terrain.position.set(0,-1.6,0);
+        terrain.position.set(60,-1,0);
         }
     );
 
@@ -84,20 +94,28 @@ projectile.castShadow = true;
 scene.add(projectile);
 
 var leverGeometry = new THREE.BoxGeometry(1,0.5,1),
-    leverMaterial = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') }),
+    leverMaterial = new THREE.MeshLambertMaterial({ map: map2 }),
     lever = new THREE.Mesh(leverGeometry, leverMaterial);
 
 lever.position.set(4,6.2,1);
-lever.rotation.z = Math.PI/4;
+lever.rotation.z = Math.PI/3.5;
 
 scene.add(lever);
 
 var counterWeightGeometry = new THREE.BoxGeometry(3,3,3), 
-    counterWeightMaterial = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('textures/desert.jpg') }),
-     counterWeight = new THREE.Mesh(counterWeightGeometry,counterWeightMaterial);
+    counterWeightMaterial = new THREE.MeshLambertMaterial({  map: map2}),
+    counterWeight = new THREE.Mesh(counterWeightGeometry,counterWeightMaterial);
 
+counterWeight.position.set(8,8,1);
 scene.add(counterWeight);
-counterWeight.position.set(7.5,12.8,1);
+
+
+var cylinderGeometry = new THREE.CylinderGeometry(0.1,0.1,2.7),
+    cylinderMaterial = new THREE.MeshLambertMaterial({  map: map2, bumpMap: map2, bumpScale: 0.5 }),
+    cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+
+cylinder.position.set(8, 10, 1);
+scene.add(cylinder);
 
 // Spotlight
 var spotLight = new THREE.SpotLight(0xffffff, 1, 30);
@@ -110,13 +128,13 @@ var sun = new THREE.DirectionalLight(0xffffff, 0.9);
 sun.castShadow = true;
 scene.add(sun);
 			
-camera.position.set(10,15,10);
-camera.lookAt(scene.position);
+camera.position.set(10,10,15);
+projectile.add(camera);
 //------------------------------------------------------------------------------------------------------
 
 // Creating position array 
 var x = [], y = [], result = [], i = 0;
-projectile.position.set(0,1, 1);
+projectile.position.set(0,2, 1);
 render();
 
 
@@ -128,33 +146,42 @@ function render(){
     stats.update();
 
     //GUI Updates
-    projectile.scale.x = guiControls.projectileMass;
-    projectile.scale.y = guiControls.projectileMass;
-    projectile.scale.z = guiControls.projectileMass;
-    counterWeight.scale.set(guiControls.counterMass/150, guiControls.counterMass/150, guiControls.counterMass/150);
-
+    projectile.scale.set(guiControls.projectileMass, guiControls.projectileMass, guiControls.projectileMass);
+    counterWeight.scale.set(guiControls.counterMass/300 + 0.2, guiControls.counterMass/300 + 0.2, guiControls.counterMass/300 + 0.2);
     lever.scale.x = guiControls.leverLength;
 
+    if(resetPressed == true)
+    {
+        projectile.position.set(0,2,1);
+        lever.rotation.z = Math.PI/3.5;
+        counterWeight.position.set(8,8,1);
+        cylinder.position.set(8,10,1);
+        //camera.position.set(10,15,20);
+        
+    }
+        
     if(startPressed == true)
     { 
         result = getPosArray(x,y);
 
         if(i < 10){
-            lever.rotation.z -= Math.PI/20;
-            counterWeight.position.y -= 1.2;
+            lever.rotation.z -= Math.PI/22;
+            counterWeight.position.y -= 0.75;
+            cylinder.position.y -= 0.75;
         }
         if(result.y[i] >= 0){
 
-        projectile.position.x = result.x[i] * 3;
-        projectile.position.y = result.y[i] * 3;
-        projectile.position.z = 0;  
-        
+            projectile.position.x = result.x[i] * 3;
+            projectile.position.y = result.y[i] * 3 - 1;
+            projectile.position.z = 0;  
+            
+            //console.log("x: " + projectile.position.x + " 	y: " + projectile.position.y);
+            if(i < result.x.length)
+              i++;
 
-        console.log("x: " + projectile.position.x + " 	y: " + projectile.position.y);
-
-        i++;
-        }
-    }  
+            console.log(i);
+        }    
+    } 
  	renderer.render(scene, camera);
 }
 
@@ -173,11 +200,11 @@ function getPosArray(x,y){
     const g = 9.81; 
 
     //Calculate init velocity
-    let m1 = 100,               //counter weight mass
-        m2 = guiControls.projectileMass,                 //projectile mass
-        d1 = 0.6,               //distance: frame to counter weight 
-        d2 = guiControls.leverLength,                 //distance: projectile to frame   
-        theta = Math.PI/4,      //degree (rad)
+    let m1 = guiControls.counterMass,     //counter weight mass
+        m2 = guiControls.projectileMass,  //projectile mass
+        d1 = 0.6,                         //distance: frame to counter weight 
+        d2 = guiControls.leverLength,     //distance: projectile to frame   
+        theta = Math.PI/4,                //degree (rad)
         frameHeight = 0.5;
 
     var v0 = getInitVelocity(m1,m2,d1,d2,theta);
@@ -187,14 +214,17 @@ function getPosArray(x,y){
     //Initial values
     let delta_t = 0.01;     // step size       
     x[0] = 0;                                
-    y[0] = Math.sin(theta) * d2 + frameHeight;
+    y[0] = 0;
 
     //Air drag
-    const r = 0.2,              //radius of projectil
-          A = Math.PI * r^2,    //area of projectile (disc)
-          C = 0.2,                //air drag coeff (0 - 1)
-          rho = 1.2;            // air density
+    const r = 0.2,                //radius of projectil
+          A = Math.PI * r^2,      //area of projectile (disc)
+          rho = 1.2;              // air density
 
+    var C = guiControls.airResistance;                  // Air resistance coeff. (0 - 1)
+
+
+         
     let Fdrag_x, Fdrag_y, ax, ay, i = 0;
 
     //Do simulation loop while projectile is above ground (ground: y = 0)
