@@ -1,3 +1,8 @@
+/**
+ * Mathematical function for fetching projectile position arrays 
+ * Function returning result, an object of two arrays (x,y)
+ */
+
 function getPosArray(x,y){
 
     //Gravity

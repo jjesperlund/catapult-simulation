@@ -1,4 +1,4 @@
-// "Must-be" global variables
+//Global variables
 var startPressed = false;
 var resetPressed = false;
 var rings = [];

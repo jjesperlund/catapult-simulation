@@ -1,3 +1,7 @@
+/**
+ * Initializing lights in scene
+ */
+
 function initLights(){
 
     // Spotlight
@@ -10,5 +14,5 @@ function initLights(){
     var sun = new THREE.DirectionalLight(0xffffff, 0.9);
     sun.castShadow = true;
     scene.add(sun);
-    
+
 }
