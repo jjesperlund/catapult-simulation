@@ -10,7 +10,7 @@ var guiControls = new function(){
     this.projectileMass = 1;
     this.counterMass = 120;
     this.leverLength = 14;
-    this.airResistance = 0.2;
+    this.airResistance = 0.1;
     this.start = function() {startPressed = true; resetPressed = false;}
     this.reset = function() {resetPressed = true; startPressed = false; i = 0; index++;}   
 }
@@ -21,7 +21,7 @@ datGUI.domElement.id = 'gui';
 datGUI.add(guiControls, "projectileMass", 0.8, 1.5);
 datGUI.add(guiControls, "counterMass", 80, 200);  
 datGUI.add(guiControls, "leverLength", 12, 18);
-datGUI.add(guiControls,"airResistance",0.12,0.3);
+datGUI.add(guiControls,"airResistance",0.09,0.15);
 datGUI.add(guiControls,'start');
 datGUI.add(guiControls,'reset');
 
