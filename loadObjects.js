@@ -1,5 +1,5 @@
 /**
- * Loading .obj-files, mapping textures to them and adding to scene
+ * Loading .obj-files, mapping textures 
  */
 
 function loadObjects(){
@@ -11,7 +11,7 @@ function loadObjects(){
     'objects/catapult.js',
     // Function when resource is loaded
     function ( geometry, materials ) {
-        var catapultMaterial = new THREE.MeshPhongMaterial({ map: map2, bumpMap: map2, bumpScale: 0.3 });
+        var catapultMaterial = new THREE.MeshPhongMaterial({ map: map2, bumpMap: map2, bumpScale: 0.4 });
         var catapult = new THREE.Mesh( geometry, catapultMaterial );
         catapult.receiveShadow = false;
         catapult.castShadow = true;

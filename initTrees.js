@@ -1,5 +1,5 @@
 /**
- * Creating trees and adding to scene
+ * Creating trees 
  */
 
 function initTrees(){
