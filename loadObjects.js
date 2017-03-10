@@ -11,8 +11,10 @@ function loadObjects(){
     'objects/catapult.js',
     // Function when resource is loaded
     function ( geometry, materials ) {
-        var catapultMaterial = new THREE.MeshPhongMaterial({ map: map2, bumpMap: map2, bumpScale: 0.5 });
+        var catapultMaterial = new THREE.MeshPhongMaterial({ map: map2, bumpMap: map2, bumpScale: 0.3 });
         var catapult = new THREE.Mesh( geometry, catapultMaterial );
+        catapult.receiveShadow = false;
+        catapult.castShadow = true;
         scene.add( catapult );
 
         //JSON Object Static Transformations
@@ -28,9 +30,11 @@ function loadObjects(){
         'objects/landscape.js',
         // Function when resource is loaded
         function ( geometry, materials ) {
-            var terrainMaterial = new THREE.MeshPhongMaterial({ map: map, 
+            var terrainMaterial = new THREE.MeshLambertMaterial({ map: map, 
             bumpMap: map, bumpScale: 0.5 });
             var terrain = new THREE.Mesh( geometry, terrainMaterial );
+            terrain.receiveShadow = true;
+            terrain.castShadow = false;
             scene.add( terrain );
 
         //JSON Object Static Transformations

@@ -4,15 +4,23 @@
 
 function initLights(){
 
-    // Spotlight
-    var spotLight = new THREE.SpotLight(0xffffff, 1, 30);
+    // Sunlight 1
+    var spotLight = new THREE.PointLight(0xffffff, 1.2, 200);
     spotLight.castShadow = true;
-    spotLight.position.set(0,20,5);
+    spotLight.shadowMapWidth = 800;
+    spotLight.shadowMapHeight =800;
+
+    spotLight.position.set(100,150,40);
     scene.add(spotLight);
 
-    // Sun Lightning
-    var sun = new THREE.DirectionalLight(0xffffff, 0.9);
+    // Sun Light 2
+    var sun = new THREE.DirectionalLight(0xffffff, 1);
     sun.castShadow = true;
     scene.add(sun);
+
+    //Light at catapult
+    var light = new THREE.PointLight(0xffffff, 1.2, 8);
+    light.position.set(8,8,5);
+    scene.add(light);
 
 }

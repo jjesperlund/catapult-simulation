@@ -18,22 +18,27 @@ function initTrees(){
 
     var tree1 = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x4d2800}));
     tree1.position.set(10,-1,-40);
+    tree1.castShadow = true;
     scene.add(tree1);
 
     var tree2 = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x663300}));
     tree2.position.set(80,-1,-50);
+    tree2.castShadow = true;
     scene.add(tree2);
 
     var tree3 = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x4d2800}));
     tree3.position.set(170,-1,-10);
+    tree3.castShadow = true;
     scene.add(tree3);
 
     var tree4 = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x663300}));
     tree4.position.set(70,-1,40);
+    tree4.castShadow = true;
     scene.add(tree4);
 
     var tree5 = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x663300}));
     tree5.position.set(30,-1,50);
+    tree5.castShadow = true;
     scene.add(tree5);
 
 }

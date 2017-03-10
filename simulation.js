@@ -11,6 +11,7 @@ var guiControls = new function(){
     this.counterMass = 120;
     this.leverLength = 14;
     this.airResistance = 0.1;
+    this.followProjectile = false;
     this.start = function() {startPressed = true; resetPressed = false;}
     this.reset = function() {resetPressed = true; startPressed = false; i = 0; index++;}   
 }
@@ -22,6 +23,7 @@ datGUI.add(guiControls, "projectileMass", 0.8, 1.5);
 datGUI.add(guiControls, "counterMass", 80, 200);  
 datGUI.add(guiControls, "leverLength", 12, 18);
 datGUI.add(guiControls,"airResistance",0.09,0.15);
+datGUI.add(guiControls, "followProjectile");
 datGUI.add(guiControls,'start');
 datGUI.add(guiControls,'reset');
 
@@ -29,9 +31,9 @@ datGUI.add(guiControls,'reset');
 //Create Scene -----------------------------------------------------------------------------------------
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-camera.position.set(15,10,15);
+camera.position.set(15,15,10);
 
-var renderer = new THREE.WebGLRenderer();
+var renderer = new THREE.WebGLRenderer({alpha: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setClearColor (0xb3e0ff,1);
 renderer.shadowMapEnabled = true;
@@ -40,7 +42,7 @@ document.body.appendChild( renderer.domElement );
 
 // Mouse Control
 var controls = new THREE.OrbitControls( camera, renderer.domElement);
-controls.maxPolarAngle = Math.PI/2.2;
+controls.maxPolarAngle = Math.PI/2.6;
 
 //Load external objects
 loadObjects();
@@ -61,6 +63,7 @@ var leverGeometry = new THREE.BoxGeometry(1,0.5,1),
 
 lever.position.set(4,6.2,1);
 lever.rotation.z = Math.PI/3.5;
+lever.castShadow = true;
 scene.add(lever);
 
 var counterWeightGeometry = new THREE.BoxGeometry(3,3,3), 
@@ -68,6 +71,7 @@ var counterWeightGeometry = new THREE.BoxGeometry(3,3,3),
     counterWeight = new THREE.Mesh(counterWeightGeometry,counterWeightMaterial);
 
 counterWeight.position.set(8,8,1);
+counterWeight.castShadow = true;
 scene.add(counterWeight);
 
 var cylinderGeometry = new THREE.CylinderGeometry(0.1,0.1,2.7),
@@ -75,6 +79,7 @@ var cylinderGeometry = new THREE.CylinderGeometry(0.1,0.1,2.7),
     cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
 
 cylinder.position.set(8, 10, 1);
+cylinder.castShadow = true;
 scene.add(cylinder);
 
 //Initialize trees
@@ -94,7 +99,8 @@ for(let i = 0; i < 25; i++)
 initLights();
 
 //Camera will follow projectile		
-projectile.add(camera);	
+camera.lookAt(projectile.position);
+
 
 var i = 0;
 render();
@@ -105,6 +111,12 @@ render();
 function render(){
 
     requestAnimationFrame(render);
+
+    if(guiControls.followProjectile == false)
+        camera.lookAt(projectile.position);
+    else if(guiControls.followProjectile == true && startPressed == true)
+        projectile.add(camera);
+
 
     //GUI Updates
     if(startPressed == false){
@@ -122,6 +134,7 @@ function render(){
         lever.rotation.z = Math.PI/3.5;
         counterWeight.position.set(8,8,1);
         cylinder.position.set(8,10,1);   
+        cylinder.add(camera);
     }
         
     if(startPressed == true){ 
@@ -139,7 +152,7 @@ function render(){
         if(result.y[i] >= 0){
             console.log("x: " + projectile.position.x + " 	y: " + projectile.position.y);
             projectile.position.x = result.x[i] * 3;
-            projectile.position.y = result.y[i] * 3 - 1.5;
+            projectile.position.y = result.y[i] * 3 - 3.3;
             projectile.position.z = 0;  
             
             if(i < result.x.length)
@@ -160,7 +173,8 @@ function render(){
                 scene.add(r);
                 r.position.set(projectile.position.x, projectile.position.y , 0); 
             }
-        }    
+        } 
+   
     } 
 
  	renderer.render(scene, camera);
@@ -174,3 +188,4 @@ function getInitVelocity(m1,m2,d1,d2,theta){
 
     return V0;
 }
+
