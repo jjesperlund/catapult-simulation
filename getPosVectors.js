@@ -3,7 +3,7 @@
  * Function returning result, an object of two arrays (x,y)
  */
 
-function getPosArray(x,y){
+function getPosVectors(x,y){
 
     //Gravity
     const g = 9.81; 

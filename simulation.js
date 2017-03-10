@@ -126,7 +126,7 @@ function render(){
         
     if(startPressed == true){ 
         var result = [], x = [], y = [];
-        result = getPosArray(x,y);
+        result = getPosVectors(x,y);
 
         //Catapult animation on launch
         if(i < 10){
