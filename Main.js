@@ -55,7 +55,7 @@ loadObjects();
 var map2 = THREE.ImageUtils.loadTexture('textures/desert.jpg');
 var map5 = THREE.ImageUtils.loadTexture('textures/black_stone.jpg');
 
-var geometry = new THREE.SphereGeometry( 0.7, 10,10 ),
+var geometry = new THREE.SphereGeometry( 0.7, 18, 18 ),
     material = new THREE.MeshPhongMaterial( { color: 0x333333 } ),
     projectile = new THREE.Mesh( geometry, material );
 
@@ -63,7 +63,7 @@ projectile.castShadow = true;
 scene.add(projectile);
 
 var leverGeometry = new THREE.BoxGeometry(1,0.5,1),
-    leverMaterial = new THREE.MeshPhongMaterial({ map: map2, bumpMap: map2, bumpScale: 0.7 }),
+    leverMaterial = new THREE.MeshPhongMaterial({ map: map2, bumpMap: map2, bumpScale: 0.1 }),
     lever = new THREE.Mesh(leverGeometry, leverMaterial);
 
 lever.position.set(4,6.2,1);
