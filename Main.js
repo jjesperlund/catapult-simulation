@@ -11,7 +11,7 @@ var startPressed = false,
 
 //GUI Menu --------------------------------------------------------------------------------------------
 var guiControls = new function(){
-    this.projectileMass = 1;
+    this.projectileMass = 0.7;
     this.counterMass = 160;
     this.leverLength = 14;
     this.airResistance = 0.1;
@@ -23,9 +23,9 @@ var guiControls = new function(){
 var datGUI = new dat.GUI();
 datGUI.domElement.id = 'gui';
 
-datGUI.add(guiControls, "projectileMass", 0.8, 1.5);
+datGUI.add(guiControls, "projectileMass", 0.6, 1);
 datGUI.add(guiControls, "counterMass", 80, 200);  
-datGUI.add(guiControls, "leverLength", 12, 18);
+datGUI.add(guiControls, "leverLength", 13, 18);
 datGUI.add(guiControls,"airResistance",0.09,0.15);
 datGUI.add(guiControls, "followProjectile");
 datGUI.add(guiControls,'start');
@@ -34,15 +34,19 @@ datGUI.add(guiControls,'reset');
 
 //Create Scene -----------------------------------------------------------------------------------------
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-camera.position.set(15,15,10);
 
-var renderer = new THREE.WebGLRenderer({alpha: true});
+//var canvas = document.getElementById('canvas'); 
+var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setClearColor (0xb3e0ff,1);
 renderer.shadowMapEnabled = true;
 renderer.shadowMapSoft = true;
+
 document.body.appendChild( renderer.domElement );
+
+//Create Camera
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+camera.position.set(15,15,10);
 
 // Mouse Control
 var controls = new THREE.OrbitControls( camera, renderer.domElement);
@@ -106,8 +110,8 @@ initLights();
 //Camera will follow projectile		
 camera.lookAt(projectile.position);
 
-
 var i = 0;
+
 render();
 
 //Functions --------------------------------------------------------------------------------------------

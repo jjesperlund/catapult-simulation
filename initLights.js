@@ -7,8 +7,8 @@ function initLights(){
     // Sunlight 1
     var spotLight = new THREE.PointLight(0xffffff, 1.2, 200);
     spotLight.castShadow = true;
-    spotLight.shadowMapWidth = 800;
-    spotLight.shadowMapHeight =800;
+    spotLight.shadowMapWidth = 700;
+    spotLight.shadowMapHeight =700;
 
     spotLight.position.set(100,150,40);
     scene.add(spotLight);

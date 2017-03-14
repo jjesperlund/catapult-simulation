@@ -28,11 +28,7 @@ function animate(){
         //Visualizing rings when touch-down
         if(i == result.x.length - 1) 
         {
-            if(projectile.position.y <= 0.0)
-                projectile.position.y = 0.1
-            
-            if(projectile.position.y >= 0.5)
-                projectile.position.y = 0.1
+            projectile.position.y = -0.5;
 
             r = rings[index];
             r.rotation.x = Math.PI/2;
@@ -44,7 +40,7 @@ function animate(){
 }
 
 function updateGUI(){
-    projectile.scale.set(guiControls.projectileMass, guiControls.projectileMass, guiControls.projectileMass);
+    projectile.scale.set(guiControls.projectileMass + 0.1, guiControls.projectileMass + 0.1, guiControls.projectileMass + 0.1);
     counterWeight.scale.set(guiControls.counterMass/300 + 0.2, guiControls.counterMass/300 + 0.2, guiControls.counterMass/300 + 0.2);
     lever.scale.x = guiControls.leverLength;
 
