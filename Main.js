@@ -34,6 +34,7 @@ datGUI.add(guiControls,'reset');
 
 //Create Scene -----------------------------------------------------------------------------------------
 var scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0xf2f2f2, 1, 700);
 
 //var canvas = document.getElementById('canvas'); 
 var renderer = new THREE.WebGLRenderer();
@@ -90,6 +91,14 @@ var cylinderGeometry = new THREE.CylinderGeometry(0.1,0.1,2.7),
 cylinder.position.set(8, 10, 1);
 cylinder.castShadow = true;
 scene.add(cylinder);
+
+var planeGeometry = new THREE.PlaneGeometry(2000,2000);
+    planeMaterial = new THREE.MeshPhongMaterial({ map: THREE.ImageUtils.loadTexture('textures/sand.jpg') }),
+    plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+plane.rotation.x = -Math.PI/2;
+plane.position.y = -2;
+scene.add(plane);
 
 //Initialize trees
 initTrees();
