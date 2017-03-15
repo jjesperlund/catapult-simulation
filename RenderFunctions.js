@@ -18,8 +18,8 @@ function animate(){
 
         console.log("x: " + projectile.position.x + " 	y: " + projectile.position.y);
 
-        projectile.position.x = result.x[i] * 3;
-        projectile.position.y = result.y[i] * 3 - 3.3;
+        projectile.position.x = result.x[i] * 4;
+        projectile.position.y = result.y[i] * 4;
         projectile.position.z = 0;  
 
         if(i < result.x.length)
@@ -42,11 +42,17 @@ function animate(){
 function updateGUI(){
     projectile.scale.set(guiControls.projectileMass + 0.1, guiControls.projectileMass + 0.1, guiControls.projectileMass + 0.1);
     counterWeight.scale.set(guiControls.counterMass/300 + 0.2, guiControls.counterMass/300 + 0.2, guiControls.counterMass/300 + 0.2);
-    lever.scale.x = guiControls.leverLength;
+    lever.scale.x = guiControls.leverLength + 12;
 
-    projectile.position.x = lever.position.x -(guiControls.leverLength*Math.cos(lever.rotation.z))/2;
-    projectile.position.y = lever.position.y -(guiControls.leverLength*Math.sin(lever.rotation.z))/2 + 1;
+    projectile.position.x = lever.position.x -((guiControls.leverLength + 12)*Math.cos(lever.rotation.z))/2;
+    projectile.position.y = lever.position.y -((guiControls.leverLength + 12)*Math.sin(lever.rotation.z))/2 + 1;
     projectile.position.z = lever.position.z;
+
+    counterWeight.position.x = lever.position.x + ((guiControls.leverLength + 12)*Math.cos(lever.rotation.z))/2 - 0.3;
+    counterWeight.position.y = lever.position.y + ((guiControls.leverLength + 12)*Math.sin(lever.rotation.z))/2 - 4;
+
+    cylinder.position.x = lever.position.x + ((guiControls.leverLength + 12)*Math.cos(lever.rotation.z))/2 - 0.3;
+    cylinder.position.y = lever.position.y + ((guiControls.leverLength + 12)*Math.sin(lever.rotation.z))/2 - 2;
 }
 
 function getInitVelocity(m1,m2,d1,d2,theta){

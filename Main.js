@@ -13,7 +13,7 @@ var startPressed = false,
 var guiControls = new function(){
     this.projectileMass = 0.7;
     this.counterMass = 160;
-    this.leverLength = 14;
+    this.leverLength = 3;
     this.airResistance = 0.1;
     this.followProjectile = false;
     this.start = function() {startPressed = true; resetPressed = false;}
@@ -25,7 +25,7 @@ datGUI.domElement.id = 'gui';
 
 datGUI.add(guiControls, "projectileMass", 0.6, 1);
 datGUI.add(guiControls, "counterMass", 80, 200);  
-datGUI.add(guiControls, "leverLength", 13, 18);
+datGUI.add(guiControls, "leverLength", 2,4);
 datGUI.add(guiControls,"airResistance",0.09,0.15);
 datGUI.add(guiControls, "followProjectile");
 datGUI.add(guiControls,'start');
@@ -137,6 +137,7 @@ function render(){
         counterWeight.position.set(8,8,1);
         cylinder.position.set(8,10,1);   
         cylinder.add(camera);
+        updateGUI();
     }
         
     if(startPressed == true)

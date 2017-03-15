@@ -38,7 +38,7 @@ function loadObjects(){
             scene.add( terrain );
 
         //JSON Object Static Transformations
-        terrain.scale.x = 0.3;
+        terrain.scale.x = 0.5;
         terrain.scale.y = 0.2;
         terrain.scale.z = 0.2;
         terrain.position.set(100,-1,0);

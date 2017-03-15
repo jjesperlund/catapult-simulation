@@ -27,7 +27,7 @@ function initTrees(){
     scene.add(tree2);
 
     var tree3 = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0x4d2800}));
-    tree3.position.set(170,-1,-10);
+    tree3.position.set(210,-1,-15);
     tree3.castShadow = true;
     scene.add(tree3);
 

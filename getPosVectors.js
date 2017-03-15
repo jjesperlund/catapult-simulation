@@ -12,7 +12,7 @@ function getPosVectors(x,y){
     let m1 = guiControls.counterMass,     //counter weight mass
         m2 = guiControls.projectileMass,  //projectile mass
         d1 = 0.6,                         //distance: frame to counter weight 
-        d2 = guiControls.leverLength,     //distance: projectile to frame   
+        d2 = guiControls.leverLength + 12,     //distance: projectile to frame   
         theta = Math.PI/4,                //degree (rad)
         frameHeight = 0.5;
 
