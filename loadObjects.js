@@ -41,7 +41,7 @@ function loadObjects(){
         terrain.scale.x = 0.5;
         terrain.scale.y = 0.2;
         terrain.scale.z = 0.2;
-        terrain.position.set(100,-1,0);
+        terrain.position.set(170,-1,0);
         }
     );
 
