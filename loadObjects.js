@@ -4,7 +4,7 @@
 
 function loadObjects(){
 
-    var loader = new THREE.JSONLoader();
+    var loader = new THREE.LegacyJSONLoader();
     var map2 = THREE.ImageUtils.loadTexture('textures/desert.jpg');
     
     loader.load(
