@@ -52,6 +52,7 @@ camera.position.set(15,15,10);
 // Mouse Control
 var controls = new THREE.OrbitControls( camera, renderer.domElement);
 controls.maxPolarAngle = Math.PI/2.6;
+controls.maxDistance = 100;
 
 //Load external objects
 loadObjects();
